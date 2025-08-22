@@ -1,5 +1,7 @@
 # Markdown转换器
 
+**🌐 Language:** [中文](README.md) | [English](README-EN.md)
+
 一个功能丰富、界面美观的在线Markdown转HTML转换器，支持实时预览、语法高亮、主题切换等功能。
 
 ## 功能特性
