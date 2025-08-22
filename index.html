@@ -3,30 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Markdown转换器</title>
+    <meta name="description" content="现代化的Markdown转换器，支持实时预览和多种主题">
+    <meta name="theme-color" content="#3b82f6">
+    <title>Markdown转换器 - 现代化编辑器</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <header class="header">
-            <h1>Markdown转换器</h1>
-            <div class="toolbar">
-                <button id="theme-toggle" class="btn">🌓 切换主题</button>
-                <button id="clear-btn" class="btn">🗑️ 清空</button>
-                <button id="export-btn" class="btn">📁 导出HTML</button>
-                <button id="copy-btn" class="btn">📋 复制HTML</button>
+        <header class="header" role="banner">
+            <div class="header-content">
+                <h1 class="app-title">
+                    <span class="title-icon">📝</span>
+                    Markdown转换器
+                </h1>
+                <p class="app-subtitle">现代化编辑器，支持实时预览</p>
             </div>
+            <nav class="toolbar" role="toolbar" aria-label="工具栏">
+                <button id="theme-toggle" class="btn" aria-label="切换主题" title="切换明暗主题">
+                    <span class="btn-icon">🌓</span>
+                    <span class="btn-text">切换主题</span>
+                </button>
+                <button id="clear-btn" class="btn" aria-label="清空内容" title="清空编辑器内容">
+                    <span class="btn-icon">🗑️</span>
+                    <span class="btn-text">清空</span>
+                </button>
+                <button id="export-btn" class="btn" aria-label="导出HTML文件" title="导出为HTML文件">
+                    <span class="btn-icon">📁</span>
+                    <span class="btn-text">导出HTML</span>
+                </button>
+                <button id="copy-btn" class="btn" aria-label="复制HTML代码" title="复制HTML代码到剪贴板">
+                    <span class="btn-icon">📋</span>
+                    <span class="btn-text">复制HTML</span>
+                </button>
+            </nav>
         </header>
         
-        <main class="editor-container">
-            <div class="editor-panel">
-                <h3>Markdown输入</h3>
-                <textarea 
-                    id="markdown-input" 
-                    placeholder="在这里输入您的Markdown内容...
+        <main class="editor-container" role="main">
+            <section class="editor-panel" aria-labelledby="editor-title">
+                <h3 id="editor-title" class="panel-title">
+                    <span class="panel-icon">✏️</span>
+                    Markdown输入
+                </h3>
+                <div class="editor-wrapper">
+                    <textarea
+                        id="markdown-input"
+                        class="markdown-editor"
+                        placeholder="在这里输入您的Markdown内容...
 
 # 示例标题
-这是一个**粗体文本**和*斜体文本*的示例。
+这是一段**粗体文本**和*斜体文本*的示例。
 
 ## 列表示例
 - 列表项1
@@ -44,24 +72,61 @@ function hello() {
 [访问GitHub](https://github.com)
 
 > 这是一个引用块
-">
-                </textarea>
-                <div class="stats">
-                    <span id="char-count">字符数: 0</span>
-                    <span id="word-count">单词数: 0</span>
+"
+                        aria-label="Markdown编辑器"
+                        spellcheck="false"
+                        autocomplete="off">
+                    </textarea>
                 </div>
-            </div>
-            
-            <div class="preview-panel">
-                <h3>HTML预览</h3>
-                <div id="html-preview" class="preview-content">
-                    <p>在左侧输入Markdown内容，这里将显示实时预览...</p>
+                <footer class="stats" role="status" aria-live="polite">
+                    <span id="char-count" class="stat-item">
+                        <span class="stat-icon">📊</span>
+                        字符数: 0
+                    </span>
+                    <span id="word-count" class="stat-item">
+                        <span class="stat-icon">📝</span>
+                        单词数: 0
+                    </span>
+                </footer>
+            </section>
+
+            <section class="preview-panel" aria-labelledby="preview-title">
+                <h3 id="preview-title" class="panel-title">
+                    <span class="panel-icon">👁️</span>
+                    HTML预览
+                </h3>
+                <div id="html-preview" class="preview-content" role="region" aria-label="HTML预览区域">
+                    <p class="preview-placeholder">
+                        <span class="placeholder-icon">💭</span>
+                        在左侧输入Markdown内容，这里将显示实时预览...
+                    </p>
                 </div>
-            </div>
+            </section>
         </main>
         
-        <footer class="footer">
-            <p>支持的Markdown语法：标题、粗体、斜体、列表、代码块、链接、图片、引用块、表格等</p>
+        <footer class="footer" role="contentinfo">
+            <div class="footer-content">
+                <p class="supported-features">
+                    <span class="features-icon">⚡</span>
+                    <strong>支持的语法：</strong>
+                    <span class="feature-tags">
+                        <span class="feature-tag">标题</span>
+                        <span class="feature-tag">粗体/斜体</span>
+                        <span class="feature-tag">列表</span>
+                        <span class="feature-tag">代码块</span>
+                        <span class="feature-tag">链接</span>
+                        <span class="feature-tag">图片</span>
+                        <span class="feature-tag">引用块</span>
+                        <span class="feature-tag">表格</span>
+                    </span>
+                </p>
+                <p class="app-info">
+                    <small>
+                        <span class="version-badge">v2.0</span>
+                        现代化Markdown转换器
+                    </small>
+                </p>
+            </div>
         </footer>
     </div>
     
