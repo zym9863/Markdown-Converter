@@ -5,6 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="现代化的Markdown转换器，支持实时预览和多种主题">
     <meta name="theme-color" content="#3b82f6">
+
+    <!-- PWA Meta Tags -->
+    <meta name="application-name" content="Markdown转换器">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="MD转换器">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="msapplication-config" content="none">
+    <meta name="msapplication-TileColor" content="#3b82f6">
+    <meta name="msapplication-tap-highlight" content="no">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- PWA Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-128x128.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="icons/icon-96x96.png">
+    <link rel="apple-touch-icon" href="icons/icon-152x152.png">
+    <link rel="mask-icon" href="icons/icon-192x192.png" color="#3b82f6">
+
     <title>Markdown转换器 - 现代化编辑器</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -134,5 +155,113 @@ function hello() {
     <script src="markdown-parser.js"></script>
     <script src="converter.js"></script>
     <script src="script.js"></script>
+
+    <!-- PWA Service Worker 注册 -->
+    <script>
+        /**
+         * 注册Service Worker
+         * 提供PWA功能和离线支持
+         */
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(registration => {
+                        console.log('✅ Service Worker 注册成功:', registration.scope);
+
+                        // 检查更新
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // 有新版本可用
+                                    if (confirm('发现新版本，是否立即更新？')) {
+                                        newWorker.postMessage({ type: 'SKIP_WAITING' });
+                                        window.location.reload();
+                                    }
+                                }
+                            });
+                        });
+                    })
+                    .catch(error => {
+                        console.error('❌ Service Worker 注册失败:', error);
+                    });
+
+                // 监听Service Worker控制器变化
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    console.log('🔄 Service Worker 已更新');
+                    window.location.reload();
+                });
+            });
+        }
+
+        /**
+         * PWA安装提示
+         * 检测并提示用户安装PWA应用
+         */
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            console.log('💾 PWA 安装提示已准备');
+            e.preventDefault();
+            deferredPrompt = e;
+
+            // 创建安装按钮
+            const installButton = document.createElement('button');
+            installButton.textContent = '📱 安装应用';
+            installButton.className = 'btn install-btn';
+            installButton.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 1000;
+                background: #3b82f6;
+                color: white;
+                border: none;
+                padding: 12px 16px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+                cursor: pointer;
+                font-size: 14px;
+                transition: all 0.3s ease;
+            `;
+
+            installButton.addEventListener('mouseenter', () => {
+                installButton.style.transform = 'translateY(-2px)';
+                installButton.style.boxShadow = '0 6px 16px rgba(59, 130, 246, 0.4)';
+            });
+
+            installButton.addEventListener('mouseleave', () => {
+                installButton.style.transform = 'translateY(0)';
+                installButton.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.3)';
+            });
+
+            installButton.addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    console.log(`📲 用户${outcome === 'accepted' ? '接受' : '拒绝'}了安装提示`);
+                    deferredPrompt = null;
+                    installButton.remove();
+                }
+            });
+
+            document.body.appendChild(installButton);
+
+            // 3秒后自动隐藏安装按钮
+            setTimeout(() => {
+                if (installButton.parentNode) {
+                    installButton.style.opacity = '0.7';
+                }
+            }, 3000);
+        });
+
+        // PWA安装完成后隐藏安装按钮
+        window.addEventListener('appinstalled', () => {
+            console.log('🎉 PWA 安装成功');
+            const installButton = document.querySelector('.install-btn');
+            if (installButton) {
+                installButton.remove();
+            }
+        });
+    </script>
 </body>
 </html>
